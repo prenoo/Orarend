@@ -5,7 +5,6 @@ import org.apache.poi.hwpf.extractor.WordExtractor;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MainApp {
@@ -24,8 +23,8 @@ public class MainApp {
          * Removes not useful elements
          */
         List<String> subjects = new ArrayList<String>();
-        for (int i = 0; i < dok.size() -1; i++) {
-            if (dok.get(i).contains(".lap")  ||
+        for (int i = 0; i < dok.size() - 1; i++) {
+            if (dok.get(i).contains(".lap") ||
                     dok.get(i).contains("Ti.Tantárgy") ||
                     dok.get(i).contains("tanszék órái") ||
                     dok.get(i).contains("─────") ||
@@ -38,85 +37,57 @@ public class MainApp {
         }
 
         /**
-         * Split the elements of the ArrayList into columns
+         * Split the lines of the ArrayList into substring,
+         * and adding them to the courses
          */
-
-        List<String[]> targyak = new ArrayList<String[]>();
-        for(String asd : subjects) {
-            String[] egyTargy =  {
-                    asd.substring(2,4).trim(), //0. oszlop
-                    asd.substring(4,8).trim(), //1. oszlop
-                    asd.substring(8,10).trim(), //2. oszlop
-                    asd.substring(10,13).trim(), //3. oszlop
-                    asd.substring(16,52).trim(), //4. oszlop
-                    asd.substring(52,55).trim(), //5. oszlop
-                    asd.substring(56,62).trim(), //6. oszlop
-                    asd.substring(63,68).trim().replaceAll("\\s+", ""), //7. oszlop
-                    asd.substring(70,73).trim(), //8. oszlop
-                    asd.substring(76,78).trim(), //9. oszlop
-                    asd.substring(79,81).trim(), //10. oszlop
-                    asd.substring(83,84).trim(), //11. oszlop
-                    asd.substring(85,87).trim(), //12. oszlop
-                    asd.substring(87,93).trim() //13. oszlop
+        List<Course> courses = new ArrayList<Course>();
+        int felev;
+        for (String asd : subjects) {
+            String[] egyTargy = {
+                    asd.substring(2, 4).trim(), //0. oszlop - félév
+                    asd.substring(4, 8).trim(), //1. oszlop - kar
+                    asd.substring(8, 10).trim(), //2. oszlop - szki
+                    asd.substring(10, 13).trim(), //3. oszlop - ti
+                    asd.substring(16, 52).trim(), //4. oszlop - tantárgy
+                    asd.substring(52, 55).trim(), //5. oszlop - tanszék
+                    asd.substring(56, 62).trim(), //6. oszlop - tanár
+                    asd.substring(63, 68).trim().replaceAll("\\s+", ""), //7. oszlop - csoport
+                    asd.substring(70, 73).trim(), //8. oszlop - fő
+                    asd.substring(76, 78).trim(), //9. oszlop - nap
+                    asd.substring(79, 81).trim(), //10. oszlop - kezdés
+                    asd.substring(83, 84).trim(), //11. oszlop - hossz
+                    asd.substring(85, 87).trim(), //12. oszlop - tipus
+                    asd.substring(87, 93).trim() //13. oszlop - terem
             };
-            targyak.add(egyTargy);
-        }
 
-        for (String[] s : targyak) {
-            for (int i = 0; i < s.length; i++) {
-                switch (i) {
-                    case 0:
-                        System.out.println("Félév: " + s[i]);
-                        break;
-                    case 1:
-                        System.out.println("Kar: " + s[i]);
-                        break;
-                    case 2:
-                        System.out.println("?: " + s[i]);
-                        break;
-                    case 3:
-                        System.out.println("?: " + s[i]);
-                        break;
-                    case 4:
-                        System.out.println("Tárgynév: " + s[i]);
-                        break;
-                    case 5:
-                        System.out.println("Tanszék: " + s[i]);
-                        break;
-                    case 6:
-                        System.out.println("Tanár: " + s[i]);
-                        break;
-                    case 7:
-                        System.out.println("Csoport: " + s[i]);
-                        break;
-                    case 8:
-                        System.out.println("Fő: " + s[i]);
-                        break;
-                    case 9:
-                        System.out.println("Nap: " + s[i]);
-                        break;
-                    case 10:
-                        System.out.println("Kezdés: " + s[i]);
-                        break;
-                    case 11:
-                        System.out.println("Hossz: " + s[i]);
-                        break;
-                    case 12:
-                        System.out.println("Típus: " + s[i]);
-                        break;
-                    case 13:
-                        System.out.println("Terem: " + s[i]);
-                        break;
-
-                }
+            try {
+                felev = Integer.parseInt(egyTargy[0]);
+            } catch (NumberFormatException e) {
+                felev = 0;
             }
-            System.out.println();
-            System.out.println();
+
+            courses.add(new Course(
+                    felev,
+                    egyTargy[1],
+                    egyTargy[2],
+                    egyTargy[3],
+                    egyTargy[4],
+                    egyTargy[5],
+                    egyTargy[6],
+                    egyTargy[7],
+                    Integer.parseInt(egyTargy[8]),
+                    egyTargy[9],
+                    Integer.parseInt(egyTargy[10]),
+                    Integer.parseInt(egyTargy[11]),
+                    egyTargy[12],
+                    egyTargy[13]
+            ));
         }
 
-
+        for (Course c : courses) {
+            System.out.println(c);
+        }
     }
-
 
     /**
      * Method that reads a .doc file
@@ -124,7 +95,7 @@ public class MainApp {
      * @return WordExtractor object that should be converted to ArrayList
      */
     private static WordExtractor readDoc() {
-        String filePath = "C:\\Users\\Renato\\IdeaProjects\\Komplex\\src\\main\\java\\all\\geik_orarend.doc";
+        String filePath = "C:\\Users\\Renato\\IdeaProjects\\Komplex\\src\\resources\\geik_orarend.doc";
         FileInputStream fileInputStream;
 
         WordExtractor extractor = null;
