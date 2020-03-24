@@ -15,7 +15,7 @@ public class DocReader {
      * @return WordExtractor object that should be converted to ArrayList
      */
     public static WordExtractor readDoc(String fileName) {
-        String filePath = "C:\\Users\\Renato\\IdeaProjects\\Komplex\\src\\resources\\" + fileName + ".doc";
+        String filePath = fileName;
         FileInputStream fileInputStream;
 
         WordExtractor extractor = null;

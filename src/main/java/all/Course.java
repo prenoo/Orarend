@@ -2,6 +2,7 @@ package all;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Course {
@@ -47,6 +48,10 @@ public class Course {
         this.terem = terem;
         this.nap = nap;
         this.tipus = tipus;
+    }
+
+    public Course() {
+
     }
 
     public int getFelev() {
@@ -179,16 +184,5 @@ public class Course {
                 ", nap='" + nap + '\'' +
                 ", tipus='" + tipus + '\'' +
                 '}';
-    }
-
-
-    public static void search(List<Course> courses, int num) {
-        List<Course> result = courses.stream().filter(item -> item.getFelev() == num).collect(Collectors.toList());
-
-        for (Course c : result) {
-            System.out.println(c);
-        }
-
-        System.out.println("Találatok száma (/ összes:) " + result.size() + " (/ " + courses.size() + ")");
     }
 }
