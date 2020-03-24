@@ -1,5 +1,9 @@
 package all;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Course {
 
     /* TODO: switch the "nap" field from String to enum
@@ -175,5 +179,16 @@ public class Course {
                 ", nap='" + nap + '\'' +
                 ", tipus='" + tipus + '\'' +
                 '}';
+    }
+
+
+    public static void search(List<Course> courses, int num) {
+        List<Course> result = courses.stream().filter(item -> item.getFelev() == num).collect(Collectors.toList());
+
+        for (Course c : result) {
+            System.out.println(c);
+        }
+
+        System.out.println("Találatok száma (/ összes:) " + result.size() + " (/ " + courses.size() + ")");
     }
 }
