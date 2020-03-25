@@ -1,7 +1,6 @@
 package all;
 
 import javax.swing.*;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -16,10 +15,10 @@ public class CourseController {
     }
 
 
-    public static void searchList(List<Course> courses, Function<Course, String> transform, JTextField jTextField) {
+    public static <T> List<Course> searchList(List<Course> courses, Function<Course, T> transform, JTextField jTextField) {
         String searchValue = jTextField.getText();
-        List<Course> result = courses.stream().filter(item -> transform.apply(item).equals(searchValue)).collect(Collectors.toList());
-        printList(result);
-        System.out.println("Találatok száma (/ összes:) " + result.size() + " (/ " + courses.size() + ")");
+        List<Course> result = courses.stream().filter(item -> transform.apply(item).toString().equals(searchValue)).collect(Collectors.toList());
+        return result;
+        //System.out.println("Találatok száma (/ összes:) " + result.size() + " (/ " + courses.size() + ")");
     }
 }
