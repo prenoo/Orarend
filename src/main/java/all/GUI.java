@@ -8,15 +8,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-
 public class GUI {
     private JPanel panel;
     private JButton beolvasButton;
-    private JButton kilépésButton;
+    private JButton kilepesButton;
     private JComboBox comboBoxKeres;
     private JTextField textFieldKeres;
     private JButton keresButton;
     private JButton listazButton;
+    private JButton generalButton;
+    private JButton makedb;
+    private JButton irdki;
     private File inputFile;
     private Course course;
     private String filePath;
@@ -26,7 +28,7 @@ public class GUI {
 
     public GUI() {
 
-        beolvasButton.addActionListener(new ActionListener() {
+       beolvasButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 FileDialog fileDialog = new FileDialog(new Frame(), " ", FileDialog.LOAD);
@@ -38,17 +40,17 @@ public class GUI {
                     filePath = inputFile.toString();
                     List<String> orarendDoc = null;
                     try {
-                        orarendDoc = DocReader.docToArrayList(DocReader.readDoc(filePath));
+                        orarendDoc = CourseController.docToArrayList(CourseController.readDoc(filePath));
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
-                    DocReader.removeNotNeededLines(orarendDoc);
-                    subjects = DocReader.stringListToCourseList(orarendDoc);
+                    CourseController.removeNotNeededLines(orarendDoc);
+                    subjects = CourseController.stringListToCourseList(orarendDoc);
                     JOptionPane.showMessageDialog(null, "Fájl beolvasva!\n " + filePath, "Beolvasás", JOptionPane.PLAIN_MESSAGE);
                 }
             }
         });
-        kilépésButton.addActionListener(new ActionListener() {
+        kilepesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
@@ -122,6 +124,35 @@ public class GUI {
                     JOptionPane.showMessageDialog(null, "Nincs beolvasva fájl!", "Beolvasási hiba", JOptionPane.ERROR_MESSAGE);
                 }
         }
+        });
+        generalButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    JDialog dialog = new TimeTable(subjects);
+                    dialog.setVisible(true);
+                } catch (NullPointerException e1) {
+                    JOptionPane.showMessageDialog(null, "Nincs beolvasva adat!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        makedb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CourseManager courseManager = new CourseManager();
+                courseManager.setup();
+                for (Course c : subjects) {
+                    courseManager.create(c);
+                }
+            }
+        });
+        irdki.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CourseManager courseManager = new CourseManager();
+                courseManager.setup();
+                courseManager.read(444);
+            }
         });
     }
 

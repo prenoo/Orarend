@@ -1,23 +1,13 @@
 package all;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import javax.persistence.*;
+import javax.persistence.Table;
 
-public class Course {
+@Entity
+@Table(name = "oratabla")
+public class CourseDB {
 
-    /* TODO: switch the "nap" field from String to enum
-    private enum Day {
-        HETFO,
-        KEDD,
-        SZERDA,
-        CSUTORTOK,
-        PENTEK,
-        SZOMBAT
-    }
-     */
-
+    private long id;
     private int felev;
     private String kar;
     private String szki;
@@ -33,28 +23,16 @@ public class Course {
     private String nap;
     private String tipus;
 
-    public Course() {
-
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public long getId() {
+        return id;
     }
 
-    public Course(int felev, String kar, String szki, String ti, String tantargy, String tanszek, String eloado, String csoport, int fo, String nap, int kezdes, int hossz, String tipus, String terem) {
-        this.felev = felev;
-        this.kar = kar;
-        this.szki = szki;
-        this.ti = ti;
-        this.tantargy = tantargy;
-        this.tanszek = tanszek;
-        this.eloado = eloado;
-        this.csoport = csoport;
-        this.fo = fo;
-        this.kezdes = kezdes;
-        this.hossz = hossz;
-        this.terem = terem;
-        this.nap = nap;
-        this.tipus = tipus;
+    public void setId(long id){
+        this.id = id;
     }
-
-
 
     public int getFelev() {
         return felev;
@@ -170,8 +148,9 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course{" +
-                "felev=" + felev +
+        return "CourseDB{" +
+                "id=" + id +
+                ", felev=" + felev +
                 ", kar='" + kar + '\'' +
                 ", szki='" + szki + '\'' +
                 ", ti='" + ti + '\'' +
