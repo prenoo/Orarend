@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 package all;
 
 import javax.swing.*;
@@ -5,37 +9,30 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+
 import java.io.*;
 import java.util.ArrayList;
 
 
 public class CourseController {
 
-
-    public static void printList(List<Course> list) {
-        for (Course c : list) {
-            System.out.println(c);
-        }
-    }
-
-
     /**
-     *
-     * @param courses
-     * @param transform
-     * @param jTextField
-     * @param <T>
-     * @return
+     * Tárgyak között keres az alapján, hogy a JComboBox-ban melyik elemet jelöltük ki
+     * @param courses a Course objektumokat tartalmazó lista
+     * @param transform the function that will transform this whole thing
+     * @param search a felhasználó által beírt String, amire keres
+     * @return egy lista, amiben az összes találat szerepel
      */
-    public static <T> List<Course> searchList(List<Course> courses, Function<Course, T> transform, JTextField jTextField) {
-        String searchValue = jTextField.getText();
+    public static <T> List<Course> searchList(List<Course> courses, Function<Course, T> transform, JTextField search) {
+        String searchValue = search.getText();
         List<Course> result = courses.stream().filter(item -> transform.apply(item).toString().toLowerCase().contains(searchValue)).collect(Collectors.toList());
         return result;
     }
 
     /**
-     * Method that reads a .doc file
-     * @return WordExtractor object that should be converted to ArrayList
+     * A bemenő .doc kiterjesztésű fájlból kinyeri a szöveget.
+     * @param fileName a kiválasztott előzetes órarend fájl
+     * @return egy WordExtractor objektum, ami az egész beolvasott doc fájlból kinyert szöveget tartalmazza
      */
     public static WordExtractor readDoc(String fileName) {
         String filePath = fileName;
@@ -53,10 +50,10 @@ public class CourseController {
     }
 
     /**
-     * Takes the .doc file as a WordExtractor object and adds it to an ArrayList.
-     * One line in the doc is one element in the ArrayList
-     * @param extractor The input doc file
-     * @throws IOException
+     * Inputként kap egy WordExtractor objektumot, melyet String-ekből álló listává alakít át.
+     * Ezek után az eredeti dokumentum fájl egy sora az ArrayList-nek egy eleme lesz.
+     * @param extractor az a WordExtractor objektum, melyet konvertálni kell
+     * @throws IOException dobódik, ha a BufferReader-nél bármilyen IO hiba keletkezik
      */
     public static List<String> docToArrayList(WordExtractor extractor) throws IOException {
 
@@ -71,15 +68,15 @@ public class CourseController {
 
         }
         reader.close();
-
         return wordDoc;
     }
 
     /**
-     * Removes the first few lines from every page that don't contain any useful data
-     * @param inputList list read in from the .doc file
+     * Az előzetes órarend minden oldala tartalmaz olyan sorokat, melyek nem egy tantárgyat képviselnek (fejléc, lábléc, stb.)
+     * Ez a metódus eltávolít minden ilyen elemet a listából, végeredményül van egy "kész lista"
+     * @param inputList a "docToArrayList" által kapott String-ek listája
      */
-    public static void removeNotNeededLines(List<String> inputList) {
+    public static void removeUnnecessaryLines(List<String> inputList) {
         for (int i = 0; i < inputList.size() - 1; i++) {
 
             if (inputList.get(i).contains(".lap") ||
@@ -87,7 +84,7 @@ public class CourseController {
                     inputList.get(i).contains("tanszék órái") ||
                     inputList.get(i).contains("─────") ||
                     inputList.get(i).isEmpty() ||
-                    inputList.get(i).length() < 90
+                    inputList.get(i).length() < 90 //minden ténylegesen tantárgyról szóló oszlop fix hosszúságú, ha nem éri el ezt a karakterszámot a sor akkor nincs rá szükség
             ){
                 inputList.remove(i);
                 i--;
@@ -96,15 +93,17 @@ public class CourseController {
         }
     }
 
-
     /**
-     * Creates a list containing Course objects from the input list which contains strings
-     * @param list a String list with only the useful data, where one line is one subject
+     * A korábban készült listából készít Course objektumokat.
+     * Mivel minden oszlop fix hosszúságú, így a String-ekből egyszerűen létre lehet hozni a Course objektumokat tartalmazó listát
+     * @param list egy olyan String-ekből álló lista, ami már nem tartalmaz felesleges karaktereket, sorokat, minden eleme egy-egy tantárgy
      * @return a Course list
      */
     public static List<Course> stringListToCourseList(List<String> list) {
         int felev;
-        List<Course> courses = new ArrayList<Course>();
+        List<Course> courses = new ArrayList<>();
+
+        CourseDatabaseManager courseDatabaseManager = new CourseDatabaseManager();
 
         for (String targy : list) {
             try {
@@ -131,27 +130,38 @@ public class CourseController {
                     felev = 0;
                 }
 
-                courses.add(new Course(
-                        felev,
-                        egyTargy[1],
-                        egyTargy[2],
-                        egyTargy[3],
-                        egyTargy[4],
-                        egyTargy[5],
-                        egyTargy[6],
-                        egyTargy[7],
-                        Integer.parseInt(egyTargy[8]),
-                        egyTargy[9],
-                        Integer.parseInt(egyTargy[10]),
-                        Integer.parseInt(egyTargy[11]),
-                        egyTargy[12],
-                        egyTargy[13]
-                ));
+                Course temp = new Course();
+                temp.setFelev(felev);
+                temp.setKar(egyTargy[1]);
+                temp.setSzki(egyTargy[2]);
+                temp.setTi(egyTargy[3]);
+                temp.setTantargy(egyTargy[4]);
+                temp.setTanszek(egyTargy[5]);
+                temp.setEloado(egyTargy[6]);
+                temp.setCsoport(egyTargy[7]);
+                temp.setFo(Integer.parseInt(egyTargy[8]));
+                temp.setNap(egyTargy[9]);
+                temp.setKezdes(Integer.parseInt(egyTargy[10]));
+                temp.setHossz(Integer.parseInt(egyTargy[11]));
+                temp.setTipus(egyTargy[12]);
+                temp.setTerem(egyTargy[13]);
 
+                courseDatabaseManager.create(temp);
             } catch (NullPointerException e) {
                 continue;
             }
         }
         return courses;
+    }
+
+    public static void createDatabase(List<Course> courseList) {
+        try {
+            CourseDatabaseManager courseDatabaseManager = new CourseDatabaseManager();
+            for (Course c : courseList) {
+                courseDatabaseManager.create(c);
+            }
+        } catch (NullPointerException e1) {
+            e1.printStackTrace();
+        }
     }
 }

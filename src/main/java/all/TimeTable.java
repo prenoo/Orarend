@@ -1,5 +1,5 @@
 package all;
-
+/*
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -13,7 +13,7 @@ public class TimeTable extends JDialog {
     private JTable tableWeek;
     private JPanel timetablePane;
 
-    public TimeTable(List<Course> list) {
+    public TimeTable(List<Courseasdfghjk> list) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -101,3 +101,5 @@ public class TimeTable extends JDialog {
         dispose();
     }
 }
+
+ */

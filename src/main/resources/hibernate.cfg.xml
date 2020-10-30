@@ -5,13 +5,17 @@
 <hibernate-configuration>
     <session-factory>
         <!-- Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/orarenddb</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/orarenddb?useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
+        </property>
+        <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
         <property name="connection.username">root</property>
         <property name="connection.password">rootpw</property>
         <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <mapping class="all.CourseDB" />
-
+        <mapping class="all.Course" />
+        <mapping class="usermanagement.UsersDB" />
     </session-factory>
 </hibernate-configuration>
