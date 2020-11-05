@@ -1,5 +1,5 @@
 /**
- * Az admin GUI osztálya
+ * Az admin felülethez tartozó GUI
  */
 
 package all;
@@ -24,6 +24,9 @@ public class AdminGUI extends JFrame{
     private JButton ujOraButton;
     private JButton szerkesztesButton;
     private JButton torlesButton;
+    private JButton generalButton;
+    private JTextField textFieldGeneral;
+    private JComboBox comboBox1;
     private File inputFile;
     private String filePath;
     private List<Course> subjects;
@@ -169,7 +172,6 @@ public class AdminGUI extends JFrame{
                 System.exit(0);
             }
         });
-
     }
 
     /**
