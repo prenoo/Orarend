@@ -22,7 +22,6 @@ public class AdminGUI extends JFrame{
     private JButton keresButton;
     private JButton listazButton;
     private JButton ujOraButton;
-    private JButton szerkesztesButton;
     private JButton torlesButton;
     private JButton generalButton;
     private JTextField textFieldGeneral;
@@ -87,7 +86,7 @@ public class AdminGUI extends JFrame{
         });
 
         /**
-         * A kiválasztott oszlop alapján keresés a listában
+         * A kiválasztott oszlop alapján keresés a tárgyakban
          */
         keresButton.addActionListener(new ActionListener() {
             @Override

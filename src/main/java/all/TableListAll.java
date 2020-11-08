@@ -4,7 +4,10 @@
 
 package all;
 
+
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -25,25 +28,48 @@ public class TableListAll extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        //Oszlopnevek megadása
-        String[] columnNames = {"Félév", "Kar", "Szki", "Ti", "Tárgynév", "Tanszék", "Előadó", "Csoport", "Fő", "Kezdés", "Hossz", "Terem", "Nap", "Típus"};
 
         DefaultTableModel model = new DefaultTableModel();
         table.setAutoCreateRowSorter(true);
         table.setFillsViewportHeight(true);
         table.setPreferredScrollableViewportSize(new Dimension(550, 200));
 
+        //Oszlopnevek megadása
+        String[] columnNames = {"ID", "Félév", "Kar", "Szki", "Ti", "Tárgynév", "Tanszék", "Előadó", "Csoport", "Fő", "Kezdés", "Hossz", "Terem", "Nap", "Típus"};
         for (int i = 0; i < columnNames.length; i++) {
             model.addColumn(columnNames[i]);
         }
 
+        //tábla feltöltése az adatbázisból
         for (int i = 0; i < list.size(); i++) {
-            model.addRow(new Object[]{list.get(i).getFelev(), list.get(i).getKar(), list.get(i).getSzki(), list.get(i).getTi(),
+            model.addRow(new Object[]{list.get(i).getId(), list.get(i).getFelev(), list.get(i).getKar(), list.get(i).getSzki(), list.get(i).getTi(),
                     list.get(i).getTantargy(), list.get(i).getTanszek(), list.get(i).getEloado(), list.get(i).getCsoport(),
                     list.get(i).getFo(), list.get(i).getKezdes(), list.get(i).getHossz(), list.get(i).getTerem(), list.get(i).getNap(), list.get(i).getTipus()
             });
         }
         table.setModel(model);
+
+        /**
+         * Adatmódosítás, a kilistázott tárgyak közül megvizsgálja melyik sor és melyik oszlop van kiválasztva,
+         * majd az adatbázisba módosítja a
+         */
+        model.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                if (e.getType() == TableModelEvent.UPDATE) {
+                    int column = e.getColumn();
+
+                    DefaultTableModel defaultTableModel = (DefaultTableModel) table.getModel();
+
+                    String data = String.valueOf(defaultTableModel.getValueAt(table.getSelectedRow(), table.getSelectedColumn())); //a cellába beírt új érték
+                    String stringId = defaultTableModel.getValueAt(table.getSelectedRow(), 0).toString(); //a kiválasztott sor 1. oszlopa az id, ami alapján megkeresi az adatbázisban a módosítandó rekordot
+                    long id = Long.parseLong(stringId); //a Course objektum id adattagja long típusú, konverzió szükséges
+
+                    CourseDatabaseManager.update(id, data, column);
+                }
+
+            }
+        });
 
 
         buttonCancel.addActionListener(new ActionListener() {
@@ -67,12 +93,14 @@ public class TableListAll extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+
+        //oszlopszélesség beállítása
         TableColumn tableColumn = null;
         for (int i = 0; i < table.getColumnCount(); i++) {
             tableColumn = table.getColumnModel().getColumn(i);
-            if(i == 4)
+            if(i == 5)
                 tableColumn.setMinWidth(250);
-            else if(i == 5 || i == 6)
+            else if(i == 6 || i == 7)
                 tableColumn.setMinWidth(80);
             else
                 tableColumn.setMinWidth(40);
@@ -86,6 +114,5 @@ public class TableListAll extends JDialog {
     private void onCancel() {
         dispose();
     }
-
 
 }
