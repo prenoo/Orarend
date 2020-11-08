@@ -41,7 +41,7 @@ public class TanarGUI {
             public void actionPerformed(ActionEvent e) {
                 try {
                     courseList = courseDatabaseManager.loadAllData();
-                    JDialog dialog = new TableListAll(courseList);
+                    JDialog dialog = new CourseTable(courseList);
                     dialog.setVisible(true);
                 } catch (NullPointerException e1) {
                     JOptionPane.showMessageDialog(null, "Nincs beolvasva adat!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -104,7 +104,7 @@ public class TanarGUI {
                             break;
                     }
 
-                    JDialog dialog = new TableListAll(list);
+                    JDialog dialog = new CourseTable(list);
                     dialog.setVisible(true);
                 } catch (NullPointerException e1) {
                     JOptionPane.showMessageDialog(null, "Nincs kiválasztva, hogy melyik mezőben akarsz keresni!", "Keresési hiba", JOptionPane.ERROR_MESSAGE);

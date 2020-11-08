@@ -9,7 +9,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
 import java.util.List;
 
 @SuppressWarnings("ALL")

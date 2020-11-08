@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import usermanagement.UserDatabaseManager;
+import usermanagement.Users;
+
 
 public class AdminGUI extends JFrame{
     private JPanel panel;
@@ -26,16 +29,21 @@ public class AdminGUI extends JFrame{
     private JButton generalButton;
     private JTextField textFieldGeneral;
     private JComboBox comboBox1;
+    private JTextField textFieldUserKeres;
+    private JButton userKeresButton;
+    private JButton userListazButton;
     private File inputFile;
     private String filePath;
     private List<Course> subjects;
     private CourseController courseController;
-
+    private List<Users> userList;
     private List<Course> courseList;
 
 
     public AdminGUI() {
         CourseDatabaseManager courseDatabaseManager = new CourseDatabaseManager();
+        UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
+        userList = userDatabaseManager.loadAllUserData();
         courseList = courseDatabaseManager.loadAllData(); //az adatbázisból az összes tárgy beolvasása
 
         /**
@@ -76,7 +84,7 @@ public class AdminGUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try {
                     courseList = courseDatabaseManager.loadAllData();
-                    JDialog dialog = new TableListAll(courseList);
+                    JDialog dialog = new CourseTable(courseList);
                     dialog.setVisible(true);
                 } catch (NullPointerException e1) {
                     JOptionPane.showMessageDialog(null, "Nincs beolvasva adat!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -138,7 +146,7 @@ public class AdminGUI extends JFrame{
                             break;
                     }
 
-                    JDialog dialog = new TableListAll(list);
+                    JDialog dialog = new CourseTable(list);
                     dialog.setVisible(true);
                 } catch (NullPointerException e1) {
                     JOptionPane.showMessageDialog(null, "Nincs beolvasva fájl!", "Beolvasási hiba", JOptionPane.ERROR_MESSAGE);
@@ -169,6 +177,20 @@ public class AdminGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+
+        //Felhasználók listázása
+        userListazButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    userList = userDatabaseManager.loadAllUserData();
+                    JDialog dialog = new UserTable(userList);
+                    dialog.setVisible(true);
+                } catch (NullPointerException e1) {
+                    JOptionPane.showMessageDialog(null, "Nincs beolvasva adat!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

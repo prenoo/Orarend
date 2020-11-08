@@ -16,6 +16,6 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="all.Course" />
-        <mapping class="usermanagement.UsersDB" />
+        <mapping class="usermanagement.Users" />
     </session-factory>
 </hibernate-configuration>

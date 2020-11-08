@@ -4,7 +4,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "felhasznalok")
-public class UsersDB {
+public class Users {
 
     private String fullName;
     private String email;
@@ -12,7 +12,7 @@ public class UsersDB {
     private String password;
     private String role;
 
-    public UsersDB(){
+    public Users(){
 
     }
 

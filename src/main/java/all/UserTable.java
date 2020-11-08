@@ -1,35 +1,46 @@
-/**
- * Osztály a regisztráció GUI-hoz-
- */
+package all;
 
-package usermanagement;
+import usermanagement.Users;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import static usermanagement.UserController.*;
+import java.util.List;
 
-public class RegistrationGUI extends JDialog {
+public class UserTable extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField nevTextField;
-    private JTextField emailTextField;
-    private JTextField usernameTextField;
-    private JTextField passwordTextField;
+    private JPanel tablePanel;
+    private JTable table;
 
-    public RegistrationGUI() {
+    public UserTable(List<Users> userlist) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        /**
-         * A gombra kattintva a registerToDatabase() hívodik meg, ami a megadott adatok alapján új felhasználót ír az adatbázisba
-         */
+        DefaultTableModel model = new DefaultTableModel();
+        table.setAutoCreateRowSorter(true);
+        table.setFillsViewportHeight(true);
+        table.setPreferredScrollableViewportSize(new Dimension(550, 200));
+
+
+        //oszlopnevek megadása
+        String[] columnNames = {"Teljes név", "Felhasználónév", "Email", "Típus"};
+        for (int i = 0; i < columnNames.length; i++) {
+            model.addColumn(columnNames[i]);
+        }
+
+        for (int i = 0; i < userlist.size(); i++) {
+            model.addRow(new Object[]{userlist.get(i).getFullName(), userlist.get(i).getUsername(), userlist.get(i).getEmail(), userlist.get(i).getRole()});
+        }
+
+        table.setModel(model);
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                registration(nevTextField.getText(), emailTextField.getText(), usernameTextField.getText(), passwordTextField.getText());
-                JOptionPane.showMessageDialog(null, "Sikeres regisztráció", "Regisztrálás", JOptionPane.PLAIN_MESSAGE);
+                onOK();
             }
         });
 
@@ -54,10 +65,15 @@ public class RegistrationGUI extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        setMinimumSize(new Dimension(500,300));
+        setMinimumSize(new Dimension(550, 200));
         pack();
+
     }
 
+    private void onOK() {
+        // add your code here
+        dispose();
+    }
 
     private void onCancel() {
         // add your code here if necessary

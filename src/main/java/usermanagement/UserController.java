@@ -25,12 +25,12 @@ public class UserController {
     public static String verifyLogin(String username, String password) {
         boolean found = false;
 
-        UsersDB user = null;
+        Users user = null;
         Transaction transaction = null;
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             transaction = session.beginTransaction();
-            user = (UsersDB) session.createQuery("FROM UsersDB f WHERE f.username = :username").setParameter("username", username).uniqueResult();
+            user = (Users) session.createQuery("FROM Users f WHERE f.username = :username").setParameter("username", username).uniqueResult();
 
             if (user != null && user.getPassword().equals(password)) {
                 return user.getRole();
@@ -54,10 +54,10 @@ public class UserController {
      * @param username a felhasználónév, ami az adatbázisban elsődleges kulcs, így muszáj egyedinek lennie
      * @param password a felhasználóhoz tartozó jelszó
      */
-    public static void registerToDatabase(String fullname, String email, String username, String password){
+    public static void registration(String fullname, String email, String username, String password){
         UserDatabaseManager userDatabaseManager = new UserDatabaseManager();
 
-        UsersDB tempUser = new UsersDB();
+        Users tempUser = new Users();
         tempUser.setFullName(fullname);
         tempUser.setEmail(email);
         tempUser.setUsername(username);

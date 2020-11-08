@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class TableListAll extends JDialog {
+public class CourseTable extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -23,7 +23,7 @@ public class TableListAll extends JDialog {
     private JScrollPane jscrollpane;
 
 
-    public TableListAll(List<Course> list) {
+    public CourseTable(List<Course> list) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
